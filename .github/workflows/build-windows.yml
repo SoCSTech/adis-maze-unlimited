@@ -32,5 +32,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Adis-Maze-Unlimited-Build
+          name: Adis-Maze-Unlimited
           path: Adis-Maze-Unlimited-win32-x64.zip
