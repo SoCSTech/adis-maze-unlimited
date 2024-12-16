@@ -380,13 +380,13 @@ function startGameInput(cursors)
     return;
   }
 
-  if(cursors.down.downDuration(10) || gamepadUpPressed())
+  if(cursors.down.downDuration(10))
   {
     menuIndex = (menuIndex + 1),
     menuIndex %= menuItems.length;
     blipSound.play();
   }
-  else if(cursors.up.downDuration(10) || gamepadDownPressed())
+  else if(cursors.up.downDuration(10))
   {
     menuIndex = (menuIndex - 1 < 0) ? (menuItems.length - 1) : (menuIndex - 1);
     blipSound.play();
@@ -426,16 +426,16 @@ function endGameInput(cursors)
 {
   var time = +new Date();
 
-  if(cursors.up.downDuration(10) || gamepadUpPressed())
+  if(cursors.up.downDuration(10))
     menuIndex = (menuIndex + 1),
     blipSound.play(),
     menuIndex %= menuItems.length;
 
-  else if(cursors.down.downDuration(10) || gamepadDownPressed())
+  else if(cursors.down.downDuration(10))
     menuIndex = (menuIndex - 1 < 0) ? (menuItems.length - 1) : (menuIndex - 1),
     blipSound.play();
 
-  else if(enterPressed() || gamepadStartPressed())
+  else if(enterPressed())
   {
     if(menuIndex == 0)
     {
@@ -460,7 +460,7 @@ function endGameInput(cursors)
 
 function wonGameInput(cursors)
 {
-  if(!(enterPressed() || gamepadStartPressed()))
+  if(!(enterPressed()))
     return;
 
   if(typeof(warningText) != "undefined") warningText.destroy();

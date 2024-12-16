@@ -280,7 +280,7 @@ var blipSound;
 var music;
 var winSound;
 var gameoverSound;
-var gamepad;
+// var gamepad;
 
 var gameIsWon = false;
 var graph;
@@ -320,7 +320,7 @@ function start() {
   game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
   game.scale.setUserScale(2, 2);
 
-  initGamepad();
+  // initGamepad();
 
   grid = [];
   coinMap = [];
