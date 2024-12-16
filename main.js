@@ -16,8 +16,11 @@ const createWindow = () => {
     const win = new BrowserWindow({
         width: 1920,
         height: 1080,
-        fullscreen: true
+        fullscreen: true,
+        frame: false,
+        alwaysOnTop: true
     })
 
     win.loadFile('index.html')
+    win.setMenu(null)
 }   
