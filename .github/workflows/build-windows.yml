@@ -26,8 +26,8 @@ jobs:
 
       - name: Zip the output folder
         run: |
-          zip -r Adis-Maze-Unlimited-win32-x64.zip Adis-Maze-Unlimited-win32-x64
-        shell: bash
+          Compress-Archive -Path .\Adis-Maze-Unlimited-win32-x64\* -DestinationPath .\Adis-Maze-Unlimited-win32-x64.zip
+        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
