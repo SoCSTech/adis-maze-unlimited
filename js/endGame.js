@@ -20,8 +20,6 @@ var charSelectionSprite;
 var currentSelectionIndex = 0;
 var currentPlayerIndex = 0;
 
-var lastKeyPress = +new Date();
-
 function enterPressed(player = -1)
 {
   if(player == -1)
@@ -273,8 +271,6 @@ function endGameRestart(enemy)
 {
   gameoverSound.play();
 
-  lastKeyPress = +new Date();
-
   game.won = true;
 
   for(var i = 0; i < characters.length; i++)
@@ -315,11 +311,8 @@ function endGameRestart(enemy)
   for(var i = 0; i < logger.length; i++)
     logger[i].onDeath(enemy, false);
 
-  var startTexts = ["ENTER", "START"];
 
-  var startText = startTexts[+(navigator.getGamepads()[0] != null)];
-
-  descText = game.add.text(cx, cy + 18, "YOU WERE CAUGHT BY " + enemy.name + "\n\n\n\nPRESS " + startText + " TO CONTINUE",
+  descText = game.add.text(cx, cy + 18, "YOU WERE CAUGHT BY " + enemy.name + "\n\n\n\nPRESS START TO CONTINUE",
   {
     font: "10pt Press Start 2P",
     fill: "#fff",
@@ -433,45 +426,17 @@ function endGameInput(cursors)
 {
   var time = +new Date();
 
-  if((time - lastKeyPress) >= 10000)
-  {
-    var timeLeft = delayTimeRestart - (time - lastKeyPress);
-
-    timeLeft /= 1000;
-
-    timeLeft = Math.round(timeLeft);
-
-    if(typeof(warningText) != "undefined") warningText.destroy();
-
-    if(timeLeft < 0)
-      return;
-
-    var cx = game.world.centerX;
-    var cy = game.world.centerY;
-
-    warningText = game.add.text(cx - 108, cy + 96, "EXITING IN " + timeLeft + " SECONDS",
-    {
-      fill: "#fff",
-      font: "8pt Press Start 2P",
-      align: "center"
-    });
-  }
-
   if(cursors.up.downDuration(10) || gamepadUpPressed())
     menuIndex = (menuIndex + 1),
-    lastKeyPress = +new Date(),
     blipSound.play(),
     menuIndex %= menuItems.length;
 
   else if(cursors.down.downDuration(10) || gamepadDownPressed())
     menuIndex = (menuIndex - 1 < 0) ? (menuItems.length - 1) : (menuIndex - 1),
-    blipSound.play(),
-    lastKeyPress = +new Date();
+    blipSound.play();
 
   else if(enterPressed() || gamepadStartPressed())
   {
-    lastKeyPress = +new Date();
-
     if(menuIndex == 0)
     {
       generateNewLevel(true);
@@ -495,32 +460,6 @@ function endGameInput(cursors)
 
 function wonGameInput(cursors)
 {
-  var time = +new Date();
-
-  if((time - lastKeyPress) >= 10000)
-  {
-    var timeLeft = delayTimeRestart - (time - lastKeyPress);
-
-    timeLeft /= 1000;
-
-    timeLeft = Math.round(timeLeft);
-
-    if(typeof(warningText) != "undefined") warningText.destroy();
-
-    if(timeLeft < 0)
-      return;
-
-    var cx = game.world.centerX;
-    var cy = game.world.centerY;
-
-    warningText = game.add.text(cx - 108, cy + 96, "EXITING IN " + timeLeft + " SECONDS",
-    {
-      fill: "#fff",
-      font: "8pt Press Start 2P",
-      align: "center"
-    });
-  }
-
   if(!(enterPressed() || gamepadStartPressed()))
     return;
 
@@ -553,7 +492,6 @@ function winGame()
 {
   winSound.play();
   winSound.volume = 1.0;
-  lastKeyPress = 99999999;
   game.won = true;
 
   var cx = game.world.centerX;
@@ -651,8 +589,6 @@ function winGame()
 function endGame(enemy)
 {
   gameoverSound.play();
-
-  lastKeyPress = +new Date();
 
   menuIndex = 0;
   menuItems = ["RETRY", "EXIT"];
