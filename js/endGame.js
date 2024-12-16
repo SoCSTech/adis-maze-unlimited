@@ -126,20 +126,8 @@ function startGame()
   currentSelectionIndex = 0;
   pauseLabel.destroy();
 
-  var keyTexts   = ["arrow keys", "d-pad/arrow keys"];
-  var startTexts = ["ENTER", "ENTER/START"];
-
-  //console.log(game.input.gamepad.active);
-
-  var keyText = keyTexts[+(navigator.getGamepads()[0] != null)];
-  var startText = startTexts[+(navigator.getGamepads()[0] != null)];
-
-  var text = "Use the " + keyText + "\nto move Adi around.\n\nCollect all the coins and\navoid the enemies to win\nthe level! You have 3 lives\nso be careful!";
-  text += "\n\nBy playing this game you are\ncontributing to our research.";
-
-
-  text += "\n\nBy pressing " + startText + " you are\n consenting to your gameplay\n data being recorded.";
-    text += "\n\nFor more information\ncontact researcharcade@gmail.com";
+  var text = "Use the joystick\nto move Adi around.\n\nCollect all the coins and\navoid the enemies to win\nthe level! You have 3 lives\nso be careful!";
+  text += "\n\nPress the A button to start!";
 
   stage++;
 
