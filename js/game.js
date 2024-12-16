@@ -1,38 +1,38 @@
 var characters = [];
 var characterSprites =
-[
-  {
+  [
+    {
       name: "ADI",
       walk: "img/character.png",
       scream: "img/character-scream.png",
       sprite: "player1",
       screamSprite: "player-scream1"
-  },
+    },
 
-  {
-    name: "MADDY",
-    walk: "img/maddi.png",
-    scream: "img/maddi-scream.png",
-    sprite: "player2",
-    screamSprite: "player-scream2"
-  },
+    {
+      name: "MADDY",
+      walk: "img/maddi.png",
+      scream: "img/maddi-scream.png",
+      sprite: "player2",
+      screamSprite: "player-scream2"
+    },
 
-  {
-    name: "BARRY",
-    walk: "img/barry.png",
-    scream: "img/barry-scream.png",
-    sprite: "player3",
-    screamSprite: "player-scream3"
-  },
+    {
+      name: "BARRY",
+      walk: "img/barry.png",
+      scream: "img/barry-scream.png",
+      sprite: "player3",
+      screamSprite: "player-scream3"
+    },
 
-  {
-    name: "SALLY",
-    walk: "img/sally.png",
-    scream: "img/sally-scream.png",
-    sprite: "player4",
-    screamSprite: "player-scream4"
-  }
-];
+    {
+      name: "SALLY",
+      walk: "img/sally.png",
+      scream: "img/sally-scream.png",
+      sprite: "player4",
+      screamSprite: "player-scream4"
+    }
+  ];
 
 var chosenCharacters = [];
 
@@ -46,7 +46,7 @@ var cursors = [];
 var scoreText;
 var score = 0;
 
-var currentMove = [ 0, 0 ];
+var currentMove = [0, 0];
 
 var enemies = [];
 
@@ -58,12 +58,12 @@ var nextDirection = [];
 var lives = 3;
 
 var game = new Phaser.Game(GameSettings.width, GameSettings.height, Phaser.CANVAS, GameSettings.canvasName,
-{
-  preload: preload,
-  create: start,
-  update: update,
-  render: render
-}, null, false, true);
+  {
+    preload: preload,
+    create: start,
+    update: update,
+    render: render
+  }, null, false, true);
 
 var playerPos = [];
 
@@ -82,27 +82,25 @@ var playerDirection = [];
  * @param {Array} a items An array containing the items.
  */
 function shuffle(a) {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[i] = a[j];
-        a[j] = x;
-    }
+  var j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = a[i];
+    a[i] = a[j];
+    a[j] = x;
+  }
 }
 
-function getNeighbours(x, y)
-{
+function getNeighbours(x, y) {
   return {
-    up:    grid[get1DFrom2D(x, y - 1)],
-    down:  grid[get1DFrom2D(x, y + 1)],
-    left:  grid[get1DFrom2D(x - 1, y)],
+    up: grid[get1DFrom2D(x, y - 1)],
+    down: grid[get1DFrom2D(x, y + 1)],
+    left: grid[get1DFrom2D(x - 1, y)],
     right: grid[get1DFrom2D(x + 1, y)]
   };
 }
 
-function preload()
-{
+function preload() {
   game.started = false;
 
   game.load.image("black", "img/black.png");
@@ -117,8 +115,7 @@ function preload()
 
   //shuffle(characterSprites);
 
-  for(var i = 0; i < characterSprites.length; i++)
-  {
+  for (var i = 0; i < characterSprites.length; i++) {
     var element = characterSprites[i];
     var playerNumber = i + 1;
 
@@ -153,34 +150,32 @@ function preload()
   game.load.audio("win", "sound/win.wav");
 }
 
-function makeTiles()
-{
+function makeTiles() {
   grid = new Array(GameSettings.cols * GameSettings.rows).fill(0);
 
   grid = generateMaze(grid);
 
-  for(var i = 0; i < GameSettings.rows; i++)
+  for (var i = 0; i < GameSettings.rows; i++)
     grid[get1DFrom2D(i, 0)] =
-    grid[get1DFrom2D(i, GameSettings.rows - 1)] = 1;
+      grid[get1DFrom2D(i, GameSettings.rows - 1)] = 1;
 
-  for(var i = 1; i < GameSettings.rows - 1; i++)
+  for (var i = 1; i < GameSettings.rows - 1; i++)
     grid[get1DFrom2D(i, 1)] =
-    grid[get1DFrom2D(i, GameSettings.rows - 2)] = 0;
+      grid[get1DFrom2D(i, GameSettings.rows - 2)] = 0;
 
-  for(var i = 0; i < GameSettings.cols; i++)
+  for (var i = 0; i < GameSettings.cols; i++)
     grid[get1DFrom2D(0, i)] =
-    grid[get1DFrom2D(GameSettings.rows - 1, i)] = 1;
+      grid[get1DFrom2D(GameSettings.rows - 1, i)] = 1;
 
-  for(var i = 1; i < GameSettings.cols - 1; i++)
+  for (var i = 1; i < GameSettings.cols - 1; i++)
     grid[get1DFrom2D(1, i)] =
-    grid[get1DFrom2D(GameSettings.cols - 2, i)] = 0;
+      grid[get1DFrom2D(GameSettings.cols - 2, i)] = 0;
 
-  for(var i = 0; i < grid.length; i++)
-  {
-    if(grid[i] == 0)
+  for (var i = 0; i < grid.length; i++) {
+    if (grid[i] == 0)
       continue;
 
-    var calcW = GameSettings.width  / GameSettings.cols;
+    var calcW = GameSettings.width / GameSettings.cols;
     var calcH = GameSettings.height / GameSettings.rows;
 
     var calcX = Math.floor(i % GameSettings.cols) * calcW;
@@ -194,23 +189,19 @@ function makeTiles()
   }
 }
 
-function addCoins()
-{
+function addCoins() {
 
-  for(var i = 0; i < grid.length; i++)
-  {
+  for (var i = 0; i < grid.length; i++) {
     var skip = false;
 
-    for(var p = 0; p < numberOfPlayers; p++)
-    {
+    for (var p = 0; p < numberOfPlayers; p++) {
       var player1DPos = get1DFrom2D(playerPos[p].x, playerPos[p].y);
 
-      if(i == player1DPos)
+      if (i == player1DPos)
         skip = true;
     }
 
-    if(skip || grid[i] != 0)
-    {
+    if (skip || grid[i] != 0) {
       coinMap[i] = ({ data: 0 });
       continue;
     }
@@ -222,14 +213,14 @@ function addCoins()
 
     var coin;
 
-    if(score >= 3)
+    if (score >= 3)
       coin = game.add.sprite(worldPos.x, worldPos.y, "coin"),
-      coinMap[i] = ({ data: 2, sprite: coin }),
-      originalCoinAmount++;
+        coinMap[i] = ({ data: 2, sprite: coin }),
+        originalCoinAmount++;
     else
       coin = game.add.sprite(worldPos.x, worldPos.y, "small-coin"),
-      coinMap[i] = ({ data: 1, sprite: coin }),
-      originalCoinAmount++;
+        coinMap[i] = ({ data: 1, sprite: coin }),
+        originalCoinAmount++;
 
     coin.anchor.x = coin.anchor.y = 0.5;
   }
@@ -237,50 +228,45 @@ function addCoins()
   //originalCoinAmount -= 8;
 }
 
-function getNeighbourScore(x, y)
-{
+function getNeighbourScore(x, y) {
   var neighbours = getNeighbours(x, y);
 
   var score = 0;
 
-  if((neighbours.up == 0 || neighbours.down == 0) &&
-     (neighbours.left == 0 || neighbours.right == 0))
+  if ((neighbours.up == 0 || neighbours.down == 0) &&
+    (neighbours.left == 0 || neighbours.right == 0))
     return 3;
 
-  if(neighbours.up == 1)
+  if (neighbours.up == 1)
     score++;
 
-  if(neighbours.left == 1)
+  if (neighbours.left == 1)
     score++;
 
-  if(neighbours.down == 1)
+  if (neighbours.down == 1)
     score++;
 
-  if(neighbours.right == 1)
+  if (neighbours.right == 1)
     score++;
 
   return score;
 }
 
-function placeCharacter()
-{
-  for(var i = 0; i < numberOfPlayers; i++)
-  {
+function placeCharacter() {
+  for (var i = 0; i < numberOfPlayers; i++) {
     var neighbours = getNeighbours(playerPos[i].x, playerPos[i].y);
 
-    while(true)
-    {
+    while (true) {
       var x = Math.floor(1 + Math.random() * (GameSettings.cols - 2));
       var y = Math.floor(1 + Math.random() * (GameSettings.rows - 2));
 
-      if(x == 1 && y == 1)
+      if (x == 1 && y == 1)
         continue;
 
-      if(grid[get1DFrom2D(x, y)] == 0)
-      {
-          playerPos[i] = { x : x, y : y };
-          characters[i].position = gridToWorld(x, y);
-          break;
+      if (grid[get1DFrom2D(x, y)] == 0) {
+        playerPos[i] = { x: x, y: y };
+        characters[i].position = gridToWorld(x, y);
+        break;
       }
     }
   }
@@ -302,20 +288,18 @@ var vertices;
 
 var logger = [];
 
-function destroyLoadingScreen()
-{
+function destroyLoadingScreen() {
   //The element
   var loadingScreen = document.getElementsByClassName("loading-screen")[0];
 
-  if(typeof(loadingScreen) == "undefined")
+  if (typeof (loadingScreen) == "undefined")
     return;
 
   //Delete it
   loadingScreen.parentNode.removeChild(loadingScreen);
 }
 
-function start()
-{
+function start() {
 
   //First, destroy the loading screen
   destroyLoadingScreen();
@@ -347,9 +331,9 @@ function start()
   coinSounds.push(game.add.audio("coin-pitch-4"));
 
   smallCoinSound = game.add.audio("coin-small");
-  explodeSound   = game.add.audio("explosion");
-  powerupSound   = game.add.audio("powerup");
-  blipSound      = game.add.audio("blip");
+  explodeSound = game.add.audio("explosion");
+  powerupSound = game.add.audio("powerup");
+  blipSound = game.add.audio("blip");
 
   // enable crisp rendering
   game.renderer.renderSession.roundPixels = true;
@@ -363,12 +347,11 @@ function start()
   playerPos = [];
   nextDirection = [];
   characters = [];
-  isInterpolating = [ false, false ];
+  isInterpolating = [false, false];
   cursors = [];
 
 
-  for(var i = 0; i < numberOfPlayers; i++)
-  {
+  for (var i = 0; i < numberOfPlayers; i++) {
     //Set up loggers
     logger[i] = new Logger(i);
     logger[i].reset();
@@ -376,8 +359,7 @@ function start()
     //Set up cursor keys..
     cursors[i] = game.input.keyboard.createCursorKeys();
 
-    if(i == 1)
-    {
+    if (i == 1) {
       cursors[i] =
       {
         up: game.input.keyboard.addKey(Phaser.Keyboard.W),
@@ -388,32 +370,29 @@ function start()
     }
 
     playerPos.push({
-      x : 1,
-      y : 1
+      x: 1,
+      y: 1
     });
 
     nextDirection.push([]);
 
     playerDirection.push({
-      x : 0,
-      y : 0
+      x: 0,
+      y: 0
     });
   }
 
   Phaser.Canvas.setSmoothingEnabled(game.context, false);
 }
 
-function setupCursors()
-{
+function setupCursors() {
   var cursors = [];
 
-  for(var i = 0; i < numberOfPlayers; i++)
-  {
+  for (var i = 0; i < numberOfPlayers; i++) {
     //Set up cursor keys..
     cursors[i] = game.input.keyboard.createCursorKeys();
 
-    if(i == 1)
-    {
+    if (i == 1) {
       cursors[i] =
       {
         up: game.input.keyboard.addKey(Phaser.Keyboard.W),
@@ -427,35 +406,32 @@ function setupCursors()
   return cursors;
 }
 
-function resetCharacters()
-{
-  for(var i = 0; i < characters.length; i++)
-  {
-    if(characters[i] != null)
-      characters[i].destroy(); 
+function resetCharacters() {
+  for (var i = 0; i < characters.length; i++) {
+    if (characters[i] != null)
+      characters[i].destroy();
   }
 
   playerDirection = [];
   playerPos = [];
   nextDirection = [];
   characters = [];
-  isInterpolating = [ false, false ];
+  isInterpolating = [false, false];
   cursors = [];
 
   cursors = setupCursors();
 
-  for(var i = 0; i < numberOfPlayers; i++)
-  {
+  for (var i = 0; i < numberOfPlayers; i++) {
     playerPos.push({
-      x : 1,
-      y : 1
+      x: 1,
+      y: 1
     });
 
     nextDirection.push([]);
 
     playerDirection.push({
-      x : 0,
-      y : 0
+      x: 0,
+      y: 0
     });
 
     var pos = gridToWorld(playerPos[i].x, playerPos[i].y);
@@ -473,11 +449,10 @@ function resetCharacters()
   }
 }
 
-function lateStart()
-{
-  if(typeof(pauseLabel) != "undefined") pauseLabel.destroy();
-  if(typeof(descText) != "undefined") descText.destroy();
-  if(typeof(charSelectionSprite) != "undefined") charSelectionSprite.destroy();
+function lateStart() {
+  if (typeof (pauseLabel) != "undefined") pauseLabel.destroy();
+  if (typeof (descText) != "undefined") descText.destroy();
+  if (typeof (charSelectionSprite) != "undefined") charSelectionSprite.destroy();
 
   resetCharacters();
 
@@ -495,8 +470,8 @@ function lateStart()
   addEnemies();
 
   scoreText = game.add.text(32, 4, " ", {
-    font:  "12px Press Start 2P",
-    fill:  "#000",
+    font: "12px Press Start 2P",
+    fill: "#000",
     align: "left"
   });
 
@@ -505,7 +480,7 @@ function lateStart()
   var progY = (16 - GameSettings.progressHeight) / 2 + thickness * 2;
 
   var progressBG = game.add.sprite(progX - thickness, progY - thickness, "progress-bg");
-  progressBG.width  = GameSettings.progressWidth;
+  progressBG.width = GameSettings.progressWidth;
   progressBG.height = GameSettings.progressHeight;
 
   progressBar = game.add.sprite(progX, progY, "progress-fg");
@@ -517,13 +492,11 @@ function lateStart()
   game.world.bringToTop(enemyGroup);
 }
 
-function setProgress(percent)
-{
+function setProgress(percent) {
   progressBar.width = (GameSettings.progressWidth - GameSettings.progressThickness * 2) * percent;
 }
 
-function canMoveInDirection(offsetX, offsetY, pos, player)
-{
+function canMoveInDirection(offsetX, offsetY, pos, player) {
   var newX = (pos.x + offsetX);
   var newY = (pos.y + offsetY);
 
@@ -537,15 +510,14 @@ function canMoveInDirection(offsetX, offsetY, pos, player)
   return (grid[get1DFrom2D(newX, newY)] == 0);// && !directionChange;
 }
 
-function changeDirection(offsetX, offsetY, player=0)
-{
-  if(characters[player] == null)
+function changeDirection(offsetX, offsetY, player = 0) {
+  if (characters[player] == null)
     return;
 
   //last move is current move -- new move is offsetX & Y
 
 
-  if(currentMove[player] == [])
+  if (currentMove[player] == [])
     currentMove[player] = [offsetX, offsetY];
 
   //Have they changed direction (90 degrees) for either x or y
@@ -554,28 +526,26 @@ function changeDirection(offsetX, offsetY, player=0)
   var hasMoved = hasMovedX || hasMovedY;
 
   //If turned 90 degrees do next direction stuff
-  if(hasMoved)
+  if (hasMoved)
     nextDirection[player] = [offsetX, offsetY];
 
   //Otherwise -- they're going back on themselves, so do it immediately
   else
     playerDirection[player].x = offsetX,
-    playerDirection[player].y = offsetY;
+      playerDirection[player].y = offsetY;
 
-  if(playerDirection[player].x > 0)
+  if (playerDirection[player].x > 0)
     characters[player].scale.x = -1;
 
-  else if(playerDirection[player].x < 0)
+  else if (playerDirection[player].x < 0)
     characters[player].scale.x = 1;
 }
 
-var isInterpolating = [ false, false ];
+var isInterpolating = [false, false];
 
-function moveCharacter()
-{
-  for(var i = 0; i < numberOfPlayers; i++)
-  {
-    if(characters[i] == null)
+function moveCharacter() {
+  for (var i = 0; i < numberOfPlayers; i++) {
+    if (characters[i] == null)
       continue;
 
     //Run through each player. Get the position of the
@@ -585,11 +555,10 @@ function moveCharacter()
     var worldPos = gridToWorld(playerPos[i].x, playerPos[i].y);
     var dist = Math.abs(characters[i].position.x - worldPos.x) + Math.abs(characters[i].position.y - worldPos.y);
 
-    if(characters[i].position.y < 0)
+    if (characters[i].position.y < 0)
       endGame();
 
-    if(grid[pos1DDir] == 0 && dist < 2 && nextDirection[i] != [])
-    {
+    if (grid[pos1DDir] == 0 && dist < 2 && nextDirection[i] != []) {
       characters[i].position.x = worldPos.x;
       characters[i].position.y = worldPos.y;
 
@@ -599,18 +568,18 @@ function moveCharacter()
       playerDirection[i].x = nextDirection[i][0];
       playerDirection[i].y = nextDirection[i][1];
 
-      currentMove[i] = [ playerDirection[i].x, playerDirection[i].y ];
+      currentMove[i] = [playerDirection[i].x, playerDirection[i].y];
 
-      if(playerDirection[i].x > 0)
+      if (playerDirection[i].x > 0)
         characters[i].scale.x = -1;
 
-      else if(playerDirection[i].x < 0)
+      else if (playerDirection[i].x < 0)
         characters[i].scale.x = 1;
 
       nextDirection[i] = [];
     }
 
-    if(grid[pos1D] != 0 && dist < 1)
+    if (grid[pos1D] != 0 && dist < 1)
       continue;
 
     /*if(grid[pos1D] != 0 && !isInterpolating[i])
@@ -642,10 +611,8 @@ function moveCharacter()
 
     playerPos[i] = worldToGrid(characters[i].position.x, characters[i].position.y);
 
-    if(oldPos.x != playerPos[i].x || oldPos.y != playerPos[i].y)
-    {
-      if(getHitJunctionXY(grid, playerPos[i].x, playerPos[i].y) != -1)
-      {
+    if (oldPos.x != playerPos[i].x || oldPos.y != playerPos[i].y) {
+      if (getHitJunctionXY(grid, playerPos[i].x, playerPos[i].y) != -1) {
         var pos1D = get1DFrom2D(playerPos[i].x, playerPos[i].y);
         logger[i].addJunction(pos1D);
       }
@@ -655,17 +622,14 @@ function moveCharacter()
   }
 }
 
-function collectCoins()
-{
-  if(game.ended)
+function collectCoins() {
+  if (game.ended)
     return;
 
-  for(var i = 0; i < numberOfPlayers; i++)
-  {
+  for (var i = 0; i < numberOfPlayers; i++) {
     var pos1D = get1DFrom2D(playerPos[i].x, playerPos[i].y);
 
-    if(coinMap[pos1D].data != 0)
-    {
+    if (coinMap[pos1D].data != 0) {
       var worldPos = gridToWorld(playerPos[i].x, playerPos[i].y);
 
       var explosion = game.add.sprite(worldPos.x, worldPos.y, "explosion");
@@ -684,20 +648,18 @@ function collectCoins()
 
       clearTimeout(switchSpriteTimer);
       switchSpriteTimer = null;
-      setTimeout(function(i)
-      {
-        if(game.ended)
+      setTimeout(function (i) {
+        if (game.ended)
           return;
 
-        if(characters[i] == null)
+        if (characters[i] == null)
           return;
 
         characters[i].loadTexture(chosenCharacters[i].sprite, 0);
         characters[i].animations.play("walk", 12, true);
       }, 1000, i);
 
-      if(characters[i].animations.currentAnim.name != "scream")
-      {
+      if (characters[i].animations.currentAnim.name != "scream") {
         characters[i].loadTexture(chosenCharacters[i].screamSprite, 0);
         characters[i].animations.add("scream");
         characters[i].animations.play("scream", 12, true);
@@ -711,8 +673,7 @@ function collectCoins()
       //Juicy effects
       game.camera.shake(0.0025 * coinMap[pos1D].data, 50 * coinMap[pos1D].data);
 
-      explode.onComplete.add(function()
-      {
+      explode.onComplete.add(function () {
         explosion.destroy();
       }, this);
 
@@ -721,36 +682,31 @@ function collectCoins()
 
       setProgress(++pickedUpCoins / originalCoinAmount);
 
-      if(pickedUpCoins / originalCoinAmount >= 1 || gameIsWon)
+      if (pickedUpCoins / originalCoinAmount >= 1 || gameIsWon)
         winGame(),
-        gameIsWon = false;
+          gameIsWon = false;
     }
   }
 }
 
-function update()
-{
-  if(game.input.keyboard.downDuration(Phaser.KeyCode.Q, 1))
-    window.location.href = "http://games.researcharcade.com/";
+function update() {
+  if (game.input.keyboard.downDuration(Phaser.KeyCode.Q, 1))
+    window.close()
 
-  if(!game.started)
-  {
-      startGameInput(cursors[0]);
-      return;
+  if (!game.started) {
+    startGameInput(cursors[0]);
+    return;
   }
 
-  if(game.ended)
-  {
+  if (game.ended) {
     endGameInput(cursors[0]);
     return;
   }
 
-  if(game.won)
-  {
+  if (game.won) {
     wonGameInput(cursors[0]);
     return;
   }
-
 
   moveEnemies();
 
@@ -762,21 +718,20 @@ function update()
   //  gameIsWon = true;
 
 
-  for(var i = 0; i < numberOfPlayers; i++)
-  {
-    if(characters[i] == null)
+  for (var i = 0; i < numberOfPlayers; i++) {
+    if (characters[i] == null)
       continue;
 
-    if(cursors[i].up.downDuration(1))
+    if (cursors[i].up.downDuration(1))
       changeDirection(0, -1, i);
 
-    else if(cursors[i].down.downDuration(1))
+    else if (cursors[i].down.downDuration(1))
       changeDirection(0, 1, i);
 
-    else if(cursors[i].left.downDuration(1))
+    else if (cursors[i].left.downDuration(1))
       changeDirection(-1, 0, i);
 
-    else if(cursors[i].right.downDuration(1))
+    else if (cursors[i].right.downDuration(1))
       changeDirection(1, 0, i);
   }
 
@@ -787,17 +742,14 @@ function update()
   drawProgress();
 }
 
-function moveEnemies()
-{
-  for(var i = 0; i < enemies.length; i++)
+function moveEnemies() {
+  for (var i = 0; i < enemies.length; i++)
     updateEnemy(grid, enemies[i]);
 }
 
-function drawProgress()
-{
+function drawProgress() {
 
 }
 
-function render()
-{
+function render() {
 }

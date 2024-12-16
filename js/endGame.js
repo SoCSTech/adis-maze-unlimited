@@ -417,7 +417,7 @@ function startGameInput(cursors)
       startGame();
 
     else if(menuIndex == 2)
-      window.location.href = "http://games.researcharcade.com/";
+      window.close();
   }
 
   var cx = game.world.centerX;
@@ -457,13 +457,6 @@ function endGameInput(cursors)
     });
   }
 
-  if((time - lastKeyPress) >= delayTimeRestart && window.location.href != "http://games.researcharcade.com/")
-  {
-    lastKeyPress = time;
-    console.log("going to games.researcharcade.com");
-    window.location.href = "http://games.researcharcade.com/";
-  }
-
   if(cursors.up.downDuration(10) || gamepadUpPressed())
     menuIndex = (menuIndex + 1),
     lastKeyPress = +new Date(),
@@ -488,7 +481,7 @@ function endGameInput(cursors)
     }
 
     else if(menuIndex == 1)
-      window.location.href = "http://games.researcharcade.com/";
+      window.close()
   }
 
   var cx = game.world.centerX;
@@ -526,13 +519,6 @@ function wonGameInput(cursors)
       font: "8pt Press Start 2P",
       align: "center"
     });
-  }
-
-  if((time - lastKeyPress) >= delayTimeRestart && window.location.href != "http://games.researcharcade.com/")
-  {
-    lastKeyPress = time;
-    console.log("going to games.researcharcade.com");
-    window.location.href = "http://games.researcharcade.com/";
   }
 
   if(!(enterPressed() || gamepadStartPressed()))
