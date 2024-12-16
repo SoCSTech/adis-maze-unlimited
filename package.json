@@ -1,0 +1,14 @@
+{
+  "name": "adis-maze-unlimited",
+  "version": "1.0.0",
+  "author": "Ben Williams, Josh Cooper <joshcooper@lincoln.ac.uk>",
+  "description": "Adi's Maze Unlimited - A game by Ben Williams, wrapped to run on the new arcade launcher",
+  "main": "main.js",
+  "scripts": {
+    "dev": "electron .",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1"
+  }
+}
